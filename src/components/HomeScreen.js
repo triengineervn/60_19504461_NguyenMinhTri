@@ -13,8 +13,6 @@ import {
   FlatList,
 } from "react-native";
 import React, { useState, useEffect } from "react";
-import { TextInput } from "react-native-paper";
-import { AntDesign } from "@expo/vector-icons";
 
 const HomeScreen = ({
   navigation,
@@ -31,13 +29,34 @@ const HomeScreen = ({
       .catch((error) => console.error(error));
     loadNotes(data);
   }, [data]);
-  console.log(data);
+
+  const renferItem = ({ item }) => {
+    console.log(item);
+    return (
+    <View style={styles.item}>
+      <View style={{ flexDirection: "row" }}>
+        <Text style={styles.filter}>{item.content}</Text>
+      </View>
+    </View>
+  );
+}
+  
   return (
     <View style={styles.background}>
       <Text style={[styles.title, { color: "#F1B000" }]}>
         Welcome, {user ? user.username : "Guest"}!
       </Text>
-      <Text style={styles.title}>Money App</Text>
+      <Text style={[styles.title, { color: "#F1B000" }]}>
+       id: {user ? user.id : "Guest"}
+      </Text>
+      <Text style={[styles.title, { color: "#F1B000" }]}>
+       pass: {user ? user.password : "Guest"}
+      </Text>
+      <FlatList
+          data={data}
+          renderItem={renferItem}
+          keyExtractor={(item) => item.content}
+        ></FlatList>
       <TouchableOpacity
         style={styles.button}
       >
@@ -59,17 +78,10 @@ const HomeScreen = ({
 };
 const mapStateToProps = (state) => ({
   user: state.auth.user,
-  notes: state.notes.notes,
 });
 
-const mapDispatchToProps = {
-  addNote,
-  updateNote,
-  deleteNote,
-  loadNotes,
-};
 
-export default connect(mapStateToProps, mapDispatchToProps)(HomeScreen);
+export default connect(mapStateToProps)(HomeScreen);
 
 const styles = StyleSheet.create({
   background: {
